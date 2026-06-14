@@ -86,7 +86,16 @@ export default function DashboardPage({ onSelectGroup }: { onSelectGroup: (group
         .single();
 
       if (groupError) {
-        toast('error', `Failed to create group: ${groupError.message}`);
+        // Detailed error logging for debugging RLS policy issues
+        console.error('Group creation failed:', {
+          message: groupError.message,
+          code: groupError.code,
+          details: groupError.details,
+          hint: groupError.hint,
+          userId: user?.id,
+          insertedCreatedBy: user!.id,
+        });
+        toast('error', `Failed to create group: ${groupError.message}${groupError.hint ? ` (${groupError.hint})` : ''}`);
         setCreating(false);
         return;
       }
